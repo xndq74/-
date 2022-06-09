@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location, resolve, reject) {
+  if (resolve || reject) return originalPush.call(this, location, resolve, reject)
+  return originalPush.call(this, location).catch((e) => {})
+}
+
 Vue.use(VueRouter)
 const routes = [
   {
@@ -28,11 +34,37 @@ const routes = [
         component: () => import('@/views/Layout/User')
       }
     ]
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('@/views/Search')
+  },
+  {
+    path: '/searchResult/:kw',
+    name: 'SearchResult',
+    component: () => import('@/views/Search/SearchResult')
   }
 ]
-
 const router = new VueRouter({
+  // 访问路由就是唯一顶部
+  scrollBehavior: () => ({ y: 0 }),
   routes
 })
+
+// const createRouter = () => {
+//   return new VueRouter({
+//   // 访问路由就是唯一顶部
+//     scrollBehavior: () => ({ y: 0 }),
+//     routes
+//   })
+// }
+
+// const router = createRouter()
+
+// export function resetRouter () {
+//   const newRouter = createRouter()
+//   router.matcher = newRouter.matcher // reset router
+// }
 
 export default router

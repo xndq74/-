@@ -4,8 +4,8 @@ import { GetToken, SetToken, RemoveToken } from '@/utils/token'
 const getDefaultState = () => {
   return {
     token: GetToken() || [],
-    UserChannels: []
-    // ArticlesList: {}
+    UserChannels: [],
+    name: ''
   }
 }
 export default {
@@ -20,10 +20,10 @@ export default {
     },
     USERCHANNELS (state, value) {
       state.UserChannels = value
+    },
+    SET_NAME (state, name) {
+      state.name = name
     }
-    // ARTICLESDATA (state, value) {
-    //   state.ArticlesList = value
-    // }
   },
   actions: {
     // 登入用户
@@ -50,15 +50,29 @@ export default {
       if (result.status === 200) {
         commit('USERCHANNELS', result.data.data.channels)
       }
+    },
+    // 对文章不喜欢
+    async SendArticleNoLike ({ commit }, target) {
+      const result = await api.user.articleNoLike(target)
+      if (result.status === 201) {
+        return Promise.resolve()
+      }
+    },
+    // 获取用户信息
+    async GetUserInfoData ({ commit }) {
+      const result = await api.user.GetUserInfo()
+      if (result.status === 200) {
+        commit('SET_NAME', result.data.data.name)
+        return Promise.resolve()
+      } else {
+        return Promise.reject(new Error('登入过期'))
+      }
+    },
+    // 举报文章
+    async SendReportArticle ({ commit }, { target, type }) {
+      const result = await api.user.ReportArticle(target, type)
+      console.log(result)
     }
-    // 获取文章新闻推荐
-    // async GetArticlesData ({ commit }, data) {
-    //   const result = await api.user.GetArticles(data)
-    //   console.log(result)
-    //   if (result.status === 200) {
-    //     commit('ARTICLESDATA', result.data.data)
-    //   }
-    // }
 
   }
 }

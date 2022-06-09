@@ -75,17 +75,16 @@ import { firstActions, secondActions } from '@/api/reports'
 import { Notify } from 'vant'
 export default {
   name: 'TabItems',
-  props: ['ChannelsId'],
   data () {
     return {
       // 在每个list中获取数据这样数据相互独立就不会收到干扰。
       ArticlesList: [],
+      // 页面加载第二页
+      page: 1,
       // loading为false就是加载完毕
       loading: false,
       // 若数据已全部加载完毕，则直接将 finished 设置成 true
       finished: false,
-      // 时间戳，请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳 历史推荐会传给你
-      timestamp: +new Date(),
       // 下拉框刷新 设置false为刷新完成，true为成功
       isLoading: false,
       // 这样是设置函数 把函数值直接给对象
@@ -108,20 +107,20 @@ export default {
     }
   },
   created () {
-    this.GetArticles(this.timestamp, this.ChannelsId)
+    this.GetArticles()
   },
   methods: {
     // 获取文章新闻推荐
-    async GetArticles (timestamp, channel_id = '0') {
-      const result = await api.user.GetArticles({
-        channel_id,
-        timestamp
+    async GetArticles () {
+      const result = await api.user.GetSearchResult({
+        q: this.$route.params.kw,
+        page: this.page++
       })
+      console.log(result)
       if (result.status === 200) {
         // 这里要合并成数组 不让会出错。
         this.ArticlesList = [...this.ArticlesList, ...result.data.data.results]
         // this.ArticlesList = result.data.data.results
-        this.timestamp = result.data.data.pre_timestamp
         this.loading = false
         this.isLoading = false
         if (this.timestamp === null) {
@@ -136,7 +135,6 @@ export default {
     // 下拉刷新的时候触发
     onRefresh () {
       this.ArticlesList = []
-      this.GetArticles(+new Date())
     },
     // 点击动作面板返回  点击选项时触发，禁用或加载状态下不会触发 action index 第一个是选中的对象，第二个是索引
     onSelect (item) {

@@ -54,6 +54,9 @@ export default {
       await this.$store.dispatch('user/GetLoginData', values)
       this.isButtonLoading = false
       Notify({ type: 'success', message: '登入成功', duration: 1000 })
+      this.$router.replace({
+        path: '/layout/home'
+      })
     }
   }
 }

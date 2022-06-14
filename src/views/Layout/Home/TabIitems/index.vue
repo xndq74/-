@@ -15,7 +15,7 @@
         :immediate-check="false"
         offset="50"
       >
-        <van-cell v-for="Articles in ArticlesList" :key="Articles.art_id">
+        <van-cell v-for="Articles in ArticlesList" :key="Articles.art_id" @click='toDetail(Articles.art_id)'>
           <!-- 标题区域的插槽 -->
           <template #title>
             <div class="title-box">
@@ -48,7 +48,8 @@
                 <span>{{ fromTime(Articles.pubdate) }}</span>
               </div>
               <!-- 反馈按钮 -->
-              <van-icon name="cross" @click="feedback(Articles.art_id)" />
+              <!-- 要阻止事件冒泡因为，点击里面的标签会触发最外面大盒子的点击事件，要用事件修饰符来阻止冒泡 -->
+              <van-icon name="cross" @click.stop="feedback(Articles.art_id)" />
             </div>
           </template>
         </van-cell>
@@ -131,7 +132,9 @@ export default {
     },
     // 当组件滚动到底部时，会触发onLoad 发送异步请求
     onLoad () {
-      this.GetArticles(this.timestamp)
+      if (!this.ArticlesList.length !== 0) {
+        this.GetArticles(this.timestamp)
+      }
     },
     // 下拉刷新的时候触发
     onRefresh () {
@@ -173,8 +176,13 @@ export default {
     feedback (id) {
       this.show = true
       this.artId = id
+    },
+    // 跳转到详情页
+    toDetail (id) {
+      this.$router.push({
+        path: `/detail/${id}`
+      })
     }
-
   }
 }
 </script>

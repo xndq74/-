@@ -1,8 +1,11 @@
 import axios from 'axios'
 // 引入仓库访问里面的token
 import store from '@/store'
-import { GetToken } from './token'
+import { GetToken, RemoveToken, SetToken } from './token'
+import router from '@/router'
+// Dialog
 import { Notify, Dialog } from 'vant'
+import api from '@/api'
 const request = axios.create({
   baseURL: '/v1_0',
   timeout: 20000
@@ -35,18 +38,32 @@ request.interceptors.response.use(
       return RequestResult
     }
   },
-  function (error) {
+  async function (error) {
     // 401 refresh_token 未携带或已过期
     if (error.response.status === 401) {
+      store.commit('user/SET_TOKEN', '')
+      RemoveToken()
+      const newToken = await api.user.acquireNewToken()
+      if (newToken.status === 201) {
+        store.commit('user/SET_TOKEN', newToken.data.data.token)
+        SetToken('geek-itheima', newToken.data.data.token)
+      }
+      error.config.headers.Authorization = `Bearer ${GetToken('refresh_token')}`
+      // return到await的地方
+      return request(error.config)
+    }
+    if (error.response.status === 500 &&
+      error.response.data.message === 'refresh_token失效' &&
+      error.response.config.url === '/authorizations') {
       Dialog.alert({
         title: '登入过期',
         message: '请从新登入'
       }).then(async () => {
         // 因为清除token返回的是premise成功的回调 所有可以用await 等他他相应成功后在刷新页面，也可以用then和ratch来接收
         await store.dispatch('user/ResetToken')
-        // 刷新页面 在路由守卫里就可以设置回到登入界面。
-        location.reload()
+        router.replace('/login')
       })
+      // 刷新页面 在路由守卫里就可以设置回到登入界面。
     }
     // 对响应错误做点什么
     return Promise.reject(error)

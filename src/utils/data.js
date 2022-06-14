@@ -15,3 +15,7 @@ export const timeAgo = (targetTime) => {
   const b = dayjs(targetTime)
   return a.to(b) // 返回多久之前...
 }
+// 格式化时间的函数
+export const formatDate = (date) => {
+  return dayjs(date).format('YYYY-MM-DD')
+}

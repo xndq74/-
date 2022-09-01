@@ -110,7 +110,6 @@ export default {
     async GetCommentData () {
       const art_id = this.$route.params.art_id
       const result = await api.user.GetComments({ source: art_id, offset: this.offset })
-      console.log(result)
       if (result.status === 200) {
         this.offset = result.data.data.last_id
         this.totalCount = result.data.data.total_count
@@ -169,7 +168,7 @@ export default {
     },
     // 下滑时触发
     onLoad () {
-      if (!this.commentList.length !== 0) {
+      if (this.commentList.length !== 0) {
         this.GetCommentData()
       }
     }

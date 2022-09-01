@@ -25,8 +25,8 @@
               <img
                 v-if="Articles.cover.type === 1"
                 class="thumb"
-                :src="Articles.cover.images[0]"
-                alt=""
+                v-lazy="Articles.cover.images[0]"
+                error='https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20180426%2F8d46d27e4f4444feb7835b38ce968430.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1657865868&t=d8d69648aee7b11d1c4f481f7c5722e4'
               />
             </div>
           </template>
@@ -37,8 +37,8 @@
                 v-for="(image, index) in Articles.cover.images"
                 :key="index"
                 class="thumb"
-                :src="image"
-                alt=""
+                v-lazy="image"
+                error='https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20180426%2F8d46d27e4f4444feb7835b38ce968430.gif&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1657865868&t=d8d69648aee7b11d1c4f481f7c5722e4'
               />
             </div>
             <div class="label-box">

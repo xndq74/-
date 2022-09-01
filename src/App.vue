@@ -1,6 +1,9 @@
 <template>
   <div>
-    <router-view></router-view>
+    <keep-alive :exclude="['Search','SearchResult','ArticleDetail','UserEditor']">
+      <router-view></router-view>
+    </keep-alive>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 

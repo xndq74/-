@@ -26,7 +26,8 @@ const routes = [
       {
         path: 'home',
         name: 'Home',
-        component: () => import('@/views/Layout/Home')
+        component: () => import('@/views/Layout/Home'),
+        meta: { isRecord: true, top: 0 }
       },
       {
         path: 'user',
@@ -47,7 +48,7 @@ const routes = [
   },
   {
     path: '/detail/:art_id',
-    name: 'Detail',
+    name: 'ArticleDetail',
     component: () => import('@/views/ArticleDetail')
   },
   {

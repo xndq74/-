@@ -1,80 +1,84 @@
 <template>
   <div>
-    <!-- Header 区域 -->
-    <van-nav-bar
-      fixed
-      title="文章详情"
-      left-arrow
-      @click-left="$router.back()"
-    />
-
-    <!-- 文章信息区域 -->
-    <div class="article-container">
-      <!-- 文章标题 -->
-      <h1 class="art-title">{{ DetailData.title }}</h1>
-
-      <!-- 用户信息 -->
-      <van-cell
-        center
-        :title="DetailData.aut_name"
-        :label="timeAgo(DetailData.pubdate)"
-      >
-        <template #icon>
-          <img :src="DetailData.aut_photo" alt="" class="avatar" />
-        </template>
-        <template #default>
-          <div>
-            <van-button
-              type="info"
-              size="mini"
-              v-if="DetailData.is_followed"
-              @click="FocusOn"
-              >已关注</van-button
-            >
-            <van-button
-              icon="plus"
-              type="info"
-              size="mini"
-              plain
-              v-else
-              @click="FocusOn"
-              >关注</van-button
-            >
-          </div>
-        </template>
-      </van-cell>
-
-      <!-- 分割线 -->
-      <van-divider></van-divider>
-
-      <!-- 文章内容 -->
-      <div class="art-content" v-html="DetailData.content"></div>
-
-      <!-- 分割线 -->
-      <van-divider>End</van-divider>
-
-      <!-- 点赞 -->
-      <div class="like-box">
-        <van-button
-          icon="good-job"
-          type="danger"
-          size="small"
-          v-if="DetailData.attitude === 1"
-          @click="GiveLike"
-          >已点赞</van-button
-        >
-        <van-button
-          icon="good-job-o"
-          type="danger"
-          plain
-          size="small"
-          v-else
-          @click="GiveLike"
-          >点赞</van-button
-        >
-      </div>
+    <div>
+      <van-loading color="#1989fa" v-if="DetailData.art_id === undefined">加载中...</van-loading>
     </div>
-    <CommentList />
+    <div>
+      <!-- Header 区域 -->
+      <van-nav-bar
+        fixed
+        title="文章详情"
+        left-arrow
+        @click-left="$router.back()"
+      />
+      <!-- 文章信息区域 -->
+      <div class="article-container">
+        <!-- 文章标题 -->
+        <h1 class="art-title">{{ DetailData.title }}</h1>
+
+        <!-- 用户信息 -->
+        <van-cell
+          center
+          :title="DetailData.aut_name"
+          :label="timeAgo(DetailData.pubdate)"
+        >
+          <template #icon>
+            <img :src="DetailData.aut_photo" alt="" class="avatar" />
+          </template>
+          <template #default>
+            <div>
+              <van-button
+                type="info"
+                size="mini"
+                v-if="DetailData.is_followed"
+                @click="FocusOn"
+                >已关注</van-button
+              >
+              <van-button
+                icon="plus"
+                type="info"
+                size="mini"
+                plain
+                v-else
+                @click="FocusOn"
+                >关注</van-button
+              >
+            </div>
+          </template>
+        </van-cell>
+
+        <!-- 分割线 -->
+        <van-divider></van-divider>
+
+        <!-- 文章内容 -->
+        <div class="art-content" v-html="DetailData.content"></div>
+
+        <!-- 分割线 -->
+        <van-divider>End</van-divider>
+
+        <!-- 点赞 -->
+        <div class="like-box">
+          <van-button
+            icon="good-job"
+            type="danger"
+            size="small"
+            v-if="DetailData.attitude === 1"
+            @click="GiveLike"
+            >已点赞</van-button
+          >
+          <van-button
+            icon="good-job-o"
+            type="danger"
+            plain
+            size="small"
+            v-else
+            @click="GiveLike"
+            >点赞</van-button
+          >
+        </div>
+      </div>
+      <CommentList />
+    </div>
   </div>
 </template>
 
@@ -193,5 +197,9 @@ export default {
 .like-box {
   display: flex;
   justify-content: center;
+}
+.van-loading{
+  text-align: center;
+  padding: 48px;
 }
 </style>

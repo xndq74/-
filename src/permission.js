@@ -3,7 +3,7 @@ import { GetToken } from '@/utils/token'
 import store from '@/store'
 import { Notify } from 'vant'
 router.beforeEach(async (to, from, next) => {
-  const whiteList = ['/login', '/', '/layout/home'] // no redirect whitelist
+  const whiteList = ['/', 'Home', 'ArticleDetail', 'Login'] // no redirect whitelist
   const token = GetToken()
   if (token) {
     if (to.path === '/login') {
@@ -22,10 +22,19 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    console.log(to, from)
+    if (whiteList.indexOf(to.name) !== -1) {
       next()
     } else {
-      next('/login')
+      next(`/login?redirect=${to.path}`)
     }
+  }
+})
+// 路由后置守卫
+router.afterEach((to, from) => {
+  if (to.meta.isRecord) {
+    setTimeout(() => {
+      window.scrollTo(0, to.meta.top)
+    }, 0)
   }
 })

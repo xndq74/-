@@ -26,6 +26,7 @@ module.exports = defineConfig({
         // pathRewrite: { '^/v1_0': '' }
       }
     }
-  }
+  },
+  publicPath: './'
 
 })

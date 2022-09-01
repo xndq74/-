@@ -7,6 +7,7 @@ import router from '@/router'
 import { Notify, Dialog } from 'vant'
 import api from '@/api'
 const request = axios.create({
+  // baseURL: 'http://geek.itheima.net/v1_0',
   baseURL: '/v1_0',
   timeout: 20000
 })
@@ -61,7 +62,8 @@ request.interceptors.response.use(
       }).then(async () => {
         // 因为清除token返回的是premise成功的回调 所有可以用await 等他他相应成功后在刷新页面，也可以用then和ratch来接收
         await store.dispatch('user/ResetToken')
-        router.replace('/login')
+        console.log(router)
+        router.replace(`/login?redirect=${router.currentRoute.fullPath}`)
       })
       // 刷新页面 在路由守卫里就可以设置回到登入界面。
     }
